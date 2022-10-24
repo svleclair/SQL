@@ -1,0 +1,34 @@
+CREATE TABLE shootings (id INTEGER PRIMARY KEY, district INTEGER, race TEXT, latino INTEGER, sex TEXT, age INTEGER, fatal INTEGER);
+
+INSERT INTO shootings VALUES
+(5774539,35,"B",0,"M",19,0),
+(5773654,19,"B",0,"M",22,0),
+(5774327,25,"W",1,"M",26,1),
+(5773073,12,"B",0,"M",20,0),
+(5772819,2,"B",0,"M",44,1),
+(5774127,24,"W",1,"F",44,0),
+(5773334,15,"W",1,"M",38,0),
+(5774693,39,"B",0,"M",26,1),
+(5774326,25,"W",1,"M",37,0),
+(5774403,26,"W",1,"M",40,0),
+(5774125,24,"B",0,"M",23,0),
+(5774126,24,"W",1,"M",23,1),
+(5773332,15,"W",1,"M",27,0),
+(5773333,15,"W",0,"M",30,0),
+(5773417,16,"B",0,"M",32,0),
+(5773418,16,"B",0,"M",53,0),
+(5773889,22,"B",0,"M",15,0),
+(5772952,9,"W",1,"M",32,1),
+(5774324,25,"W",1,"M",52,0),
+(5773888,22,"B",0,"M",35,0),
+(5773520,18,"B",0,"M",37,1),
+(5773652,19,"B",0,"M",16,0),
+(5773653,19,"B",0,"F",27,0);
+SELECT * FROM shootings;
+SELECT SUM(latino) FROM shootings;
+SELECT SUM(fatal) FROM shootings;
+SELECT district, SUM(fatal) FROM shootings GROUP BY district;
+SELECT race, SUM(fatal) FROM shootings GROUP BY race;
+SELECT sex, SUM(fatal) FROM shootings GROUP by sex;
+SELECT sex, AVG(age) FROM shootings GROUP by sex;
+
