@@ -1,3 +1,5 @@
+--Create a small database using Philadelphia public shooting data
+
 CREATE TABLE shootings (id INTEGER PRIMARY KEY, district INTEGER, race TEXT, latino INTEGER, sex TEXT, age INTEGER, fatal INTEGER);
 
 INSERT INTO shootings VALUES
