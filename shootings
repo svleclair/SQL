@@ -26,11 +26,24 @@ INSERT INTO shootings VALUES
 (5773520,18,"B",0,"M",37,1),
 (5773652,19,"B",0,"M",16,0),
 (5773653,19,"B",0,"F",27,0);
+
 SELECT * FROM shootings;
+
+--count the number of shooting victims who are latino.
 SELECT SUM(latino) FROM shootings;
+
+--count the number of fatal shootings
 SELECT SUM(fatal) FROM shootings;
+
+--count the number of fatal shootings per police district
 SELECT district, SUM(fatal) FROM shootings GROUP BY district;
+
+--count the number of fatal shootings per race
 SELECT race, SUM(fatal) FROM shootings GROUP BY race;
+
+--count the number of fatal shootings per sex
 SELECT sex, SUM(fatal) FROM shootings GROUP by sex;
+
+--Wwhat is the average age of shooting victims per sex?
 SELECT sex, AVG(age) FROM shootings GROUP by sex;
 
