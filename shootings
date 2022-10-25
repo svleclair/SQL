@@ -44,6 +44,14 @@ SELECT race, SUM(fatal) FROM shootings GROUP BY race;
 --count the number of fatal shootings per sex
 SELECT sex, SUM(fatal) FROM shootings GROUP by sex;
 
---Wwhat is the average age of shooting victims per sex?
-SELECT sex, AVG(age) FROM shootings GROUP by sex;
+--what is the average age of shooting victims per sex?
+SELECT sex, AVG(age) "Avg Age" FROM shootings GROUP by sex;
 
+--display the database ordered by age of victim
+SELECT * FROM shootings ORDER by age asc;
+
+--display the average age of the victims in each of the districts
+SELECT district, AVG(age) "Avg Age" FROM shootings GROUP by district ORDER by district asc;
+
+--display the top 6 districts with fatal shootings
+SELECT district, SUM(fatal) "Fatal shootings" FROM shootings GROUP by district ORDER BY "Fatal shootings" desc LIMIT 6;
