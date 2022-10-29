@@ -1,0 +1,97 @@
+--Created three tables in which the actor ID was used: Table 1 (actors) containing information on the actors, Table 2 (partners) containing the names of actors 
+who were/are married and Table 3 (movies) containing information on the movies the actors were in. This was done to practice working with JOIN.
+
+CREATE TABLE actors 
+(id INTEGER PRIMARY KEY AUTOINCREMENT, 
+fullname TEXT,
+gender TEXT,
+age INTEGER);
+
+INSERT INTO actors (fullname, gender, age)
+VALUES ("Freddie Prinze Jr.","man",46);
+INSERT INTO actors (fullname, gender, age)
+VALUES ("Michelle Gellar","woman",45);
+INSERT INTO actors (fullname, gender, age)
+VALUES ("Ryan Phillippe","man",48);
+INSERT INTO actors (fullname, gender, age)
+VALUES ("Reese Witherspoon","woman",46);
+INSERT INTO actors (fullname, gender, age)
+VALUES ("Jennifer Love Hewitt","woman",43);
+INSERT INTO actors (fullname, gender, age)
+VALUES ("Brian Hallisay","man",43);
+
+
+CREATE TABLE partners
+(id INTEGER PRIMARY KEY AUTOINCREMENT,
+partner1_id INTEGER,
+partner2_id INTEGER);
+
+INSERT INTO partners (partner1_id, partner2_id) VALUES (1,2);
+INSERT INTO partners (partner1_id, partner2_id) VALUES (3,4);
+INSERT INTO partners (partner1_id, partner2_id) VALUES (5,6);
+
+
+CREATE TABLE movies
+(id INTEGER PRIMARY KEY AUTOINCREMENT,
+actor_id INTEGER,
+title TEXT,
+year INTEGER);
+
+INSERT INTO movies (actor_id, title, year) VALUES (2,"Cruel Intentions",1999);
+INSERT INTO movies (actor_id, title, year) VALUES (3,"Cruel Intentions",1999);
+INSERT INTO movies (actor_id,title, year) VALUES (4,"Cruel Intentions",1999);
+INSERT INTO movies (actor_id,title, year) VALUES (4,"Legally Blonde",2001);
+INSERT INTO movies (actor_id,title, year) VALUES (2,"I Know What You Did Last Summer",1997);
+INSERT INTO movies (actor_id,title, year) VALUES (6,"American Sniper",2014);
+INSERT INTO movies (actor_id,title, year) VALUES (1,"She's All That",1999);
+INSERT INTO movies (actor_id,title, year) VALUES (1,"I Know What You Did Last Summer",1997);
+INSERT INTO movies (actor_id,title, year) VALUES (3,"I Know What You Did Last Summer",1997);
+INSERT INTO movies (actor_id,title, year) VALUES (5,"I Know What You Did Last Summer",1997);
+
+--Looking at each table separately first to make sure they look the way I intended
+
+SELECT * FROM movies;
+SELECT * FROM partners;
+SELECT * FROM actors;
+
+--Join Table 1 and Table 2 to show the names of the actors who were/are married to each other
+
+SELECT a.fullname, b.fullname AS spouse
+FROM partners
+JOIN actors a
+ON a.id = partners.partner1_id
+JOIN actors b
+ON b.id = partners.partner2_id;
+
+--Join Table 1 and Table 3 to show the names of all the movies and the names of the actors who were in them
+
+SELECT movies.title, actors.fullname
+FROM movies
+LEFT OUTER JOIN actors
+ON movies.actor_id = actors.id
+ORDER by movies.title;
+
+--Count the number of names of actors who show up in Table 2 (that is, who were married to another actor in Table 1) for each movie
+
+SELECT movies.title, COUNT(movies.title)
+FROM actors
+JOIN partners
+ON actors.id = partners.partner1_id OR actors.id = partners.partner2_id
+JOIN movies
+ON actors.id = movies.actor_id
+GROUP by movies.title;
+
+-- List the names of movies where the actors in Table 1 are currently over the age of 45
+SELECT movies.title
+FROM movies
+JOIN actors
+ON movies.actor_id = actors.id
+WHERE actors.age > 45
+GROUP BY movies.title;
+
+--List the names of actors who were in movies in Table 3 that were released after 2000
+SELECT actors.fullname
+FROM movies
+JOIN actors
+ON movies.actor_id = actors.id
+WHERE movies.year > 2000;
