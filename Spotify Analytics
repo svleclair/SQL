@@ -68,3 +68,13 @@ AND song_mode = 1
 SELECT COUNT(*)
 FROM BIT_DB.Spotifydata
 WHERE duration_ms>240000
+
+--Create a Common Table Expression to calculate the average popularity for the artists in the Spotify data table. Then, for every artist with an average popularity of 90 or above, show their name and their average popularity.
+WITH CTE AS(
+SELECT artist_name, AVG(popularity) AS avg_popularity
+FROM Spotifydata
+GROUP BY artist_name)
+
+SELECT artist_name, avg_popularity
+FROM CTE
+WHERE avg_popularity >=90
