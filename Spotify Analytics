@@ -78,3 +78,15 @@ GROUP BY artist_name)
 SELECT artist_name, avg_popularity
 FROM CTE
 WHERE avg_popularity >=90
+
+--Identify the bike lanes that have an average safety rating of 4.0 or higher, and show that average safety rating for each of those bike lanes and label them as 'Safe Lane'
+WITH safe AS (
+SELECT street, AVG(safetyrating) as avg_safetyrating
+FROM CityBikeLanes
+GROUP BY street
+)
+
+SELECT street, avg_safetyrating, 'Safe Lane' as label
+FROM safe
+WHERE avg_safetyrating >=4.0
+ORDER BY avg_safetyrating DESC
