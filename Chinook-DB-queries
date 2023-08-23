@@ -1,0 +1,116 @@
+--The following queries were run on the Chinook database (database schema can be found here: https://www.kaggle.com/code/alaasedeeq/chinook-sql/notebook)
+
+--Show Customers (their full names, customer ID, and country) who are not in the US. 
+SELECT CustomerID, FirstName, LastName, Country
+FROM customers
+WHERE Country <> "USA"
+ORDER BY LastName ASC, FirstName ASC
+
+--Show how many customers live in each country
+SELECT Country, COUNT(CustomerID) As "Number of customers"
+FROM customers
+GROUP BY Country
+ORDER BY COUNT(CustomerID) DESC
+
+--Show all invoices of customers who live in Brazil
+SELECT c.FirstName, c.LastName, i.InvoiceID, i.InvoiceDate,i.Total
+FROM customers AS c
+JOIN invoices AS i
+ON c.CustomerID = i.CustomerID
+WHERE c.Country = "Brazil"
+ORDER BY LastName ASC, FirstName ASC
+
+--Show all customers who had invoices in 2010 in Brazil and the total amount spent
+SELECT c.FirstName, c.LastName, SUM(Total)
+FROM customers AS c
+JOIN invoices AS i
+ON c.CustomerID = i.CustomerID
+WHERE c.Country = "Brazil"
+AND InvoiceDate LIKE "2010%"
+GROUP BY i.customerID
+ORDER BY LastName ASC, FirstName ASC
+
+
+SELECT distinct Title
+FROM employees
+
+--Show Employees who are Sale Support Agents
+SELECT FirstName, LastName
+FROM employees
+WHERE Title = "Sales Support Agent"
+ORDER BY LastName ASC, FirstName ASC
+
+--Show the names of the Support Representatives for customers in Brazil
+SELECT distinct e.EmployeeID, e.FirstName, e.LastName,e.Phone
+FROM employees AS e
+JOIN customers as c
+ON e.EmployeeID = c.SupportRepId
+WHERE c.Country = "Brazil"
+
+--Show a list of all the billing countries of invoices
+SELECT distinct BillingCountry
+FROM invoices
+ORDER BY BillingCountry
+
+--Show invoices associated with each sales agent
+WITH temp AS
+(SELECT e.FirstName, e.LastName, c.CustomerID
+FROM employees AS e
+JOIN customers AS c
+ON e.EmployeeID = c.SupportRepId)
+
+SELECT t.FirstName, t.LastName, i.InvoiceID
+FROM temp AS t
+JOIN invoices AS i
+ON t.CustomerID = i.CustomerID
+
+--Show the sum of all invoices associated with each sales agent
+WITH temp AS
+(SELECT e.FirstName, e.LastName, e.EmployeeID, c.CustomerID
+FROM employees AS e
+JOIN customers AS c
+ON e.EmployeeID = c.SupportRepId)
+
+SELECT t.FirstName, t.LastName, ROUND(SUM(Total))
+FROM temp AS t
+JOIN invoices AS i
+ON t.CustomerID = i.CustomerID
+GROUP BY t.EmployeeID
+
+--Show the number of invoices in 2009 and the sum of all invoices in 2009
+SELECT COUNT(InvoiceID), ROUND(SUM(Total))
+FROM invoices
+WHERE InvoiceDate LIKE "2009%"
+
+--For all invoices in 2009, show the name of the track purchased and the name of the artist
+WITH temp AS (SELECT i.InvoiceID, t.Name, t.Albumid
+FROM invoice_items AS i
+JOIN tracks AS t
+ON i.trackID = t.trackID)
+
+SELECT temp.InvoiceID, temp.Name, artists.Name
+FROM temp
+JOIN invoices
+ON temp.InvoiceID = invoices.InvoiceID
+JOIN albums
+ON temp.Albumid = albums.AlbumID
+JOIN artists
+ON albums.ArtistID = artists.ArtistID
+WHERE invoices.InvoiceDate LIKE "2009%"
+
+--For 2010, sum the total of all invoices for each genre
+WITH temp AS
+(SELECT TrackID, Total, InvoiceDate
+FROM invoices
+JOIN invoice_items
+ON invoices.InvoiceID = invoice_items.InvoiceID)
+
+SELECT genres.Name, ROUND(SUM(Total),2) AS InvoiceTotal
+FROM temp
+JOIN tracks 
+ON temp.TrackID = tracks.TrackID
+JOIN genres
+ON tracks.Genreid = genres.GenreId
+WHERE temp.InvoiceDate LIKE "2010%"
+GROUP BY genres.Genreid
+ORDER BY InvoiceTotal DESC
